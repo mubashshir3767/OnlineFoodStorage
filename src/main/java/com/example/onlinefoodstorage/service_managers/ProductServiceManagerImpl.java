@@ -26,7 +26,7 @@ public class ProductServiceManagerImpl implements ProductServiceManager {
     @Override
     public ResponseEntity<ProductResponse> create(ProductRequest request) {
         Category category = categoryService.getById(request.getCategoryId());
-        User user = userService.getById(request.getEmployeeId());
+        User user = userService.getUserById(request.getEmployeeId().toString());
         Product entity = productMapper.toEntity(request, user, category);
         productService.create(entity);
         return ResponseEntity.ok(productMapper.toResponse(entity));
@@ -36,7 +36,7 @@ public class ProductServiceManagerImpl implements ProductServiceManager {
     public ResponseEntity<ProductResponse> update(ProductRequest request) {
         productService.getById(request.getId());
         Category category = categoryService.getById(request.getCategoryId());
-        User user = userService.getById(request.getEmployeeId());
+        User user = userService.getUserById(request.getEmployeeId().toString());
 
         Product entity = productMapper.toEntity(request, user, category);
         entity.setId(request.getId());

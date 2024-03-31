@@ -29,7 +29,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public UserResponse toResponse(User user) {
         return UserResponse.builder()
-                .id(user.getId())
+                .id(user.getId().toString())
                 .name(user.getName())
                 .status(user.getStatus().toString())
                 .password(user.getPassword())

@@ -15,4 +15,5 @@ public interface CategoryController {
     ResponseEntity<CategoryResponse> update(@RequestBody CategoryRequest request);
 
     ResponseEntity<String> delete(@PathVariable Integer id);
+
 }

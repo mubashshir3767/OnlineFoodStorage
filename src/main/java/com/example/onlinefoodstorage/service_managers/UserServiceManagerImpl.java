@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 
-
 @ServiceManager
 @RequiredArgsConstructor
 public class UserServiceManagerImpl implements UserServiceManager {
@@ -26,7 +25,7 @@ public class UserServiceManagerImpl implements UserServiceManager {
     @Override
     public ResponseEntity<UserResponse> create(UserRequest request) {
         User entity = userMapper.toEntity(request);
-        User employee = userService.getById(request.getEmployeeId());
+        User employee = userService.getUserById(request.getEmployeeId().toString());
         entity.setEmployeeId(employee.getEmployeeId());
         userService.create(entity);
         return ResponseEntity.ok(userMapper.toResponse(entity));
@@ -35,7 +34,7 @@ public class UserServiceManagerImpl implements UserServiceManager {
     @Override
     public ResponseEntity<UserResponse> update(UserRequest request) {
         User entity = userMapper.toEntity(request);
-        User employee = userService.getById(request.getEmployeeId());
+        User employee = userService.getUserById(request.getEmployeeId().toString());
         entity.setEmployeeId(employee.getEmployeeId());
         entity.setId(request.getId());
         userService.create(entity);
@@ -44,13 +43,12 @@ public class UserServiceManagerImpl implements UserServiceManager {
     }
 
     @Override
-    public ResponseEntity<UserResponse> getById(Integer integer) {
-        User user = userService.getById(integer);
-        return ResponseEntity.ok(userMapper.toResponse(user));
+    public ResponseEntity<UserResponse> getById(String integer) {
+        return null;
     }
 
     @Override
-    public void delete(Integer integer) {
+    public void delete(String integer) {
         userService.delete(integer);
     }
 
@@ -59,6 +57,12 @@ public class UserServiceManagerImpl implements UserServiceManager {
         User user = userService.getByUsernameAndPassword(authenticationRequest);
         String token = jwtService.generateToken(user);
         UserResponse userResponse = userMapper.toResponse(user);
-        return ResponseEntity.ok(new AuthenticationResponse(userResponse,token));
+        return ResponseEntity.ok(new AuthenticationResponse(userResponse, token));
+    }
+
+    @Override
+    public String getUserById(String id) {
+        User user = userService.getUserById(id);
+        return user.toString();
     }
 }

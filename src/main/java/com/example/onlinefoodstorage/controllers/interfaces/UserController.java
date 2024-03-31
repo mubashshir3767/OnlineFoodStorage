@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserController {
     ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest request);
 
-    ResponseEntity<UserResponse> getById(@PathVariable Integer id);
+    String getById(@PathVariable String id);
 
     ResponseEntity<UserResponse> update(@RequestBody @Valid UserRequest request);
 
-    ResponseEntity<String> delete(@PathVariable Integer id);
+    ResponseEntity<String> delete(@PathVariable String id);
 
     ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request);
 

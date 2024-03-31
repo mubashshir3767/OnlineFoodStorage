@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: OnlineFoodStorage
+  datasource:
+    url: jdbc:postgresql://localhost:5432/OnlineFoodStorage
+    username: postgres
+    password: 1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+redis:
+  cache:
+    host: localhost
+    port: 6379
+    caches:
+      users: 30
+
+
+server:
+  port: 8080
+
+
+
+
+jwt:
+  secret: jkbiubilubhlu
+  token:
+    validity: 604800

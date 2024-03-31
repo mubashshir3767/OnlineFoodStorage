@@ -5,7 +5,6 @@ import com.example.onlinefoodstorage.repos.CategoryRepo;
 import com.example.onlinefoodstorage.services.interfaces.CategoryService;
 import com.example.onlinefoodstorage.utils.OptionalEntityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,8 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepo.findById(id);
     }
 
+
     @Override
-    @Cacheable(value = "myCache",key = "'category_'+#id")
     public Category getById(Integer id) {
         Optional<Category> optionalCategory = this.findById(id);
         return OptionalEntityUtil.getIfPresent(optionalCategory);

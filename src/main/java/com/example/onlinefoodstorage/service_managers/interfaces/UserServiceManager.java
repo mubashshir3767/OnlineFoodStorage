@@ -6,6 +6,7 @@ import com.example.onlinefoodstorage.dtos.users.UserRequest;
 import com.example.onlinefoodstorage.dtos.users.UserResponse;
 import org.springframework.http.ResponseEntity;
 
-public interface UserServiceManager extends CrudServiceManager<ResponseEntity<UserResponse>, UserRequest,Integer> {
-  ResponseEntity<AuthenticationResponse> login(AuthenticationRequest authenticationRequest);
+public interface UserServiceManager extends CrudServiceManager<ResponseEntity<UserResponse>, UserRequest, String> {
+    ResponseEntity<AuthenticationResponse> login(AuthenticationRequest authenticationRequest);
+    String getUserById(String id);
 }

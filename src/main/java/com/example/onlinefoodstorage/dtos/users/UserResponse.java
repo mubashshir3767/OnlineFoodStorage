@@ -2,14 +2,16 @@ package com.example.onlinefoodstorage.dtos.users;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
+public class UserResponse implements Serializable {
 
-    private Integer id;
+    private String id;
 
     private String name;
 

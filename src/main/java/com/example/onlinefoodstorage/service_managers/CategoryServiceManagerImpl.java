@@ -24,7 +24,7 @@ public class CategoryServiceManagerImpl implements CategoryServiceManager {
 
     @Override
     public ResponseEntity<CategoryResponse> create(CategoryRequest request) {
-        User user = userService.getById(request.getEmployeeId());
+        User user = userService.getUserById(request.getEmployeeId().toString());
         Category category = categoryMapper.toEntity(request, user);
         categoryService.create(category);
         return ResponseEntity.ok(categoryMapper.toResponse(category));
@@ -33,7 +33,7 @@ public class CategoryServiceManagerImpl implements CategoryServiceManager {
     @Override
     public ResponseEntity<CategoryResponse> update(CategoryRequest request) {
         categoryService.getById(request.getId());
-        User user = userService.getById(request.getEmployeeId());
+        User user = userService.getUserById(request.getEmployeeId().toString());
 
         Category category = categoryMapper.toEntity(request, user);
         category.setId(request.getId());
@@ -45,11 +45,12 @@ public class CategoryServiceManagerImpl implements CategoryServiceManager {
     public ResponseEntity<CategoryResponse> getById(Integer id) {
         Category category = categoryService.getById(id);
         int productsQuantity = productService.countByCategoryId(category.getId()).size();
-        return ResponseEntity.ok(categoryMapper.toResponse(category,productsQuantity));
+        return ResponseEntity.ok(categoryMapper.toResponse(category, productsQuantity));
     }
 
     @Override
     public void delete(Integer id) {
         categoryService.delete(id);
     }
+
 }

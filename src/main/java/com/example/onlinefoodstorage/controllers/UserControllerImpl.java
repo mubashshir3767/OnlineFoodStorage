@@ -7,8 +7,12 @@ import com.example.onlinefoodstorage.dtos.users.UserRequest;
 import com.example.onlinefoodstorage.dtos.users.UserResponse;
 import com.example.onlinefoodstorage.service_managers.interfaces.UserServiceManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("admin-panel")
@@ -25,10 +29,10 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @GetMapping("getById/id")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<UserResponse> getById(Integer id) {
-        return userServiceManager.getById(id);
+    @GetMapping("getById/{id}")
+    @Cacheable(value = "users", key = "#id")
+    public String getById(String id) {
+        return userServiceManager.getUserById(id);
     }
 
     @Override
@@ -39,9 +43,9 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @DeleteMapping("delete/id")
+    @DeleteMapping("delete/{id}")
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<String> delete(Integer id) {
+    public ResponseEntity<String> delete(String id) {
         userServiceManager.delete(id);
         return ResponseEntity.ok("OBJECT HAS BEEN SUCCESSFULLY DELETED");
     }
@@ -51,4 +55,12 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<AuthenticationResponse> login(AuthenticationRequest request) {
         return userServiceManager.login(request);
     }
+
+    @Cacheable(value = "users", key = "'list'")
+    @GetMapping("/my-users")
+    public List<String> users() {
+        System.out.println("my-users: " + new Date());
+        return List.of("user1", "user2");
+    }
+
 }

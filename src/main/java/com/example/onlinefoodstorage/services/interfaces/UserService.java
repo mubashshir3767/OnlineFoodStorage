@@ -5,7 +5,7 @@ import com.example.onlinefoodstorage.entities.User;
 
 import java.util.Optional;
 
-public interface UserService extends CrudService<User, Integer, User, User> {
+public interface UserService extends CrudService<User,Integer, User, User> {
     Optional<User> findById(Integer id);
 
     User getCurrentUser();
@@ -13,4 +13,8 @@ public interface UserService extends CrudService<User, Integer, User, User> {
     User getByUsername(String currentUserUsername);
 
     User getByUsernameAndPassword(AuthenticationRequest authenticationRequest);
+
+    User getUserById(String integer);
+
+    void delete(String id);
 }
