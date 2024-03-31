@@ -1,2 +1,18 @@
-package com.example.onlinefoodstorage.dtos.categories;public class CategoryRequest {
+package com.example.onlinefoodstorage.dtos.categories;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class CategoryRequest {
+
+    private Integer id;
+
+    private String type;
+
+    private Integer employeeId;
+
 }

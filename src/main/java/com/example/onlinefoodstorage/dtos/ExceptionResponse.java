@@ -1,10 +1,12 @@
 package com.example.onlinefoodstorage.dtos;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class ExceptionHandlerResponse {
+@Builder
+public class ExceptionResponse {
 
     private final String message;
 
@@ -14,16 +16,4 @@ public class ExceptionHandlerResponse {
 
     private final HttpStatus httpStatus;
 
-    public ExceptionHandlerResponse(String message, Integer code, HttpStatus httpStatus) {
-        this.message = message;
-        this.code = code;
-        this.httpStatus = httpStatus;
-    }
-
-    public ExceptionHandlerResponse(String message, Object data, Integer code, HttpStatus httpStatus) {
-        this.message = message;
-        this.data = data;
-        this.code = code;
-        this.httpStatus = httpStatus;
-    }
 }

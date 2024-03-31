@@ -1,2 +1,7 @@
-package com.example.onlinefoodstorage.exceptions;public class NotFoundException {
+package com.example.onlinefoodstorage.exceptions;
+
+public class NotFoundException extends RuntimeException {
+    public NotFoundException(String message) {
+        super(message);
+    }
 }
