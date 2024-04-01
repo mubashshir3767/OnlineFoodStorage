@@ -1,6 +1,7 @@
 package com.example.onlinefoodstorage.controllers;
 
 import com.example.onlinefoodstorage.controllers.interfaces.CategoryController;
+import com.example.onlinefoodstorage.dtos.PagingResponse;
 import com.example.onlinefoodstorage.dtos.categories.CategoryRequest;
 import com.example.onlinefoodstorage.dtos.categories.CategoryResponse;
 import com.example.onlinefoodstorage.service_managers.interfaces.CategoryServiceManager;
@@ -23,8 +24,8 @@ public class CategoryControllerImpl implements CategoryController {
 
     @Override
     @GetMapping("getById/{id}")
-    public ResponseEntity<CategoryResponse> getById(Integer id) {
-        return categoryServiceManager.getById(id);
+    public ResponseEntity<CategoryResponse> getById(String id) {
+        return categoryServiceManager.getCategoryById(id);
     }
 
     @Override
@@ -38,5 +39,11 @@ public class CategoryControllerImpl implements CategoryController {
     public ResponseEntity<String> delete(Integer id) {
          categoryServiceManager.delete(id);
          return ResponseEntity.ok("OBJECT HAS BEEN SUCCESSFULLY DELETED");
+    }
+
+    @Override
+    @GetMapping("category-list")
+    public ResponseEntity<PagingResponse<CategoryResponse>> findByEmployeeId(int page, int size, Integer employeeId) {
+        return categoryServiceManager.findByEmployeeId(page,size,employeeId);
     }
 }

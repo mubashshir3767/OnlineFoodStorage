@@ -6,6 +6,8 @@ import com.example.onlinefoodstorage.repos.ProductRepo;
 import com.example.onlinefoodstorage.services.interfaces.ProductService;
 import com.example.onlinefoodstorage.utils.OptionalEntityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +21,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product entity) {
-        entity.setStatus(Status.ACTIVE);
         return productRepo.save(entity);
     }
 
@@ -46,7 +47,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Integer> countByCategoryId(Integer id) {
-       return productRepo.countByCategory_Id(id);
+    public Integer countByCategoryId(Integer id) {
+       return productRepo.findByCategoryId(id).size();
+    }
+
+    @Override
+    public Page<Product> findByEmployeeId(Pageable of, Integer employeeID) {
+        return productRepo.findByEmployeeId(of,employeeID);
     }
 }

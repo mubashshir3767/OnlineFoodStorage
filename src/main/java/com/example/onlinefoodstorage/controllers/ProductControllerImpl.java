@@ -1,6 +1,7 @@
 package com.example.onlinefoodstorage.controllers;
 
 import com.example.onlinefoodstorage.controllers.interfaces.ProductController;
+import com.example.onlinefoodstorage.dtos.PagingResponse;
 import com.example.onlinefoodstorage.dtos.products.ProductRequest;
 import com.example.onlinefoodstorage.dtos.products.ProductResponse;
 import com.example.onlinefoodstorage.service_managers.interfaces.ProductServiceManager;
@@ -38,5 +39,11 @@ public class ProductControllerImpl implements ProductController {
     public ResponseEntity<String> delete(Integer id) {
         productServiceManager.delete(id);
         return ResponseEntity.ok("OBJECT HAS BEEN SUCCESSFULLY DELETED");
+    }
+
+    @Override
+    @GetMapping("product-list")
+    public ResponseEntity<PagingResponse<ProductResponse>> findByEmployeeId(int page, int size, Integer employeeID) {
+        return productServiceManager.findByEmployeeId(page,size,employeeID);
     }
 }

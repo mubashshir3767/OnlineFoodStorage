@@ -24,5 +24,4 @@ public class UserRequest {
 
     private String password;
 
-    private Integer employeeId;
 }

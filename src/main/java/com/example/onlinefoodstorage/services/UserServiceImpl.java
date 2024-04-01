@@ -2,6 +2,8 @@ package com.example.onlinefoodstorage.services;
 
 import com.example.onlinefoodstorage.dtos.users.AuthenticationRequest;
 import com.example.onlinefoodstorage.entities.User;
+import com.example.onlinefoodstorage.enums.Role;
+import com.example.onlinefoodstorage.enums.Status;
 import com.example.onlinefoodstorage.repos.UserRepo;
 import com.example.onlinefoodstorage.services.interfaces.UserService;
 import com.example.onlinefoodstorage.utils.OptionalEntityUtil;
@@ -10,9 +12,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -27,41 +32,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Integer integer) {
-        return null;
-    }
-
-    @Cacheable(value = "users", key = "#id")
-    @Override
-    public User getUserById(String id) {
-        Optional<User> optionalUser = this.findById(Integer.parseInt(id));
+    @Cacheable(value = "users",key = "#id")
+    public User getById(Integer id) {
+        Optional<User> optionalUser = this.findById(id);
         return OptionalEntityUtil.getIfPresent(optionalUser);
     }
 
     @Override
-    @Caching(put = @CachePut(value = "users", key = "#id"),
+    @Caching(put = @CachePut(value = "users", key = "#entity.id"),
             evict = @CacheEvict(value = "users", key = "'list'"))
     public User update(User entity) {
         return userRepo.save(entity);
     }
 
     @Override
-    public void delete(Integer integer) {
-
-    }
-
     @Caching(evict = {
             @CacheEvict(value = "users", key = "'list'"),
             @CacheEvict(value = "users", key = "#id")
     })
-    public void delete(String id) {
-        User user = this.getUserById(id);
+    public void delete(Integer id) {
+        User user = this.getById(id);
         userRepo.delete(user);
     }
 
     @Override
     public Optional<User> findById(Integer id) {
         return userRepo.findById(id);
+    }
+
+    @Override
+    public Page<User> findByEmployeeId(Integer employeeId, Pageable pageable) {
+        return userRepo.findByEmployeeId(employeeId,pageable);
     }
 
     @Override
@@ -82,5 +83,4 @@ public class UserServiceImpl implements UserService {
                 userRepo.findByUsernameAndPassword(request.getUsername(), request.getPassword());
         return OptionalEntityUtil.getIfPresent(optionalUser);
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.onlinefoodstorage.service_managers;
 
 import com.example.onlinefoodstorage.annotations.ServiceManager;
+import com.example.onlinefoodstorage.dtos.PagingResponse;
 import com.example.onlinefoodstorage.dtos.users.AuthenticationRequest;
 import com.example.onlinefoodstorage.dtos.users.AuthenticationResponse;
 import com.example.onlinefoodstorage.dtos.users.UserRequest;
@@ -11,7 +12,10 @@ import com.example.onlinefoodstorage.security.JwtService;
 import com.example.onlinefoodstorage.service_managers.interfaces.UserServiceManager;
 import com.example.onlinefoodstorage.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+
 
 
 @ServiceManager
@@ -25,7 +29,7 @@ public class UserServiceManagerImpl implements UserServiceManager {
     @Override
     public ResponseEntity<UserResponse> create(UserRequest request) {
         User entity = userMapper.toEntity(request);
-        User employee = userService.getUserById(request.getEmployeeId().toString());
+        User employee = userService.getCurrentUser();
         entity.setEmployeeId(employee.getEmployeeId());
         userService.create(entity);
         return ResponseEntity.ok(userMapper.toResponse(entity));
@@ -34,21 +38,20 @@ public class UserServiceManagerImpl implements UserServiceManager {
     @Override
     public ResponseEntity<UserResponse> update(UserRequest request) {
         User entity = userMapper.toEntity(request);
-        User employee = userService.getUserById(request.getEmployeeId().toString());
+        User employee = userService.getCurrentUser();
         entity.setEmployeeId(employee.getEmployeeId());
         entity.setId(request.getId());
         userService.create(entity);
         return ResponseEntity.ok(userMapper.toResponse(entity));
-
     }
 
     @Override
-    public ResponseEntity<UserResponse> getById(String integer) {
+    public ResponseEntity<UserResponse> getById(Integer integer) {
         return null;
     }
 
     @Override
-    public void delete(String integer) {
+    public void delete(Integer integer) {
         userService.delete(integer);
     }
 
@@ -61,8 +64,15 @@ public class UserServiceManagerImpl implements UserServiceManager {
     }
 
     @Override
-    public String getUserById(String id) {
-        User user = userService.getUserById(id);
-        return user.toString();
+    public ResponseEntity<UserResponse> getUserById(String id) {
+        User user = userService.getById(Integer.parseInt(id));
+        return ResponseEntity.ok(userMapper.toResponse(user));
+    }
+
+    @Override
+    public ResponseEntity<PagingResponse<UserResponse>> findByEmployeeId(int page, int size, Integer employeeId) {
+        Page<User> userPage = userService.findByEmployeeId(employeeId, PageRequest.of(page, size));
+        PagingResponse<UserResponse> response = userMapper.toResponse(userPage);
+        return ResponseEntity.ok(response);
     }
 }

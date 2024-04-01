@@ -1,6 +1,7 @@
 package com.example.onlinefoodstorage.mappers;
 
 import com.example.onlinefoodstorage.annotations.Mapper;
+import com.example.onlinefoodstorage.dtos.PagingResponse;
 import com.example.onlinefoodstorage.dtos.categories.CategoryRequest;
 import com.example.onlinefoodstorage.dtos.categories.CategoryResponse;
 import com.example.onlinefoodstorage.dtos.users.UserResponse;
@@ -10,8 +11,11 @@ import com.example.onlinefoodstorage.enums.Status;
 import com.example.onlinefoodstorage.mappers.interfaces.CategoryMapper;
 import com.example.onlinefoodstorage.mappers.interfaces.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Mapper
 @RequiredArgsConstructor
 public class CategoryMapperImpl implements CategoryMapper {
@@ -28,15 +32,15 @@ public class CategoryMapperImpl implements CategoryMapper {
     }
 
     @Override
-    public CategoryResponse toResponse(Category category,Integer productsQuantity) {
+    public CategoryResponse toResponse(Category category, Integer productsQuantity) {
         UserResponse userResponse = userMapper.toResponse(category.getEmployee());
-       return CategoryResponse.builder()
-               .id(category.getId())
-               .type(category.getType())
-               .productsQuantity(productsQuantity)
-               .status(category.getStatus().toString())
-               .createdTime(category.getCreatedTime().toString())
-               .employee(userResponse).build();
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .type(category.getType())
+                .productsQuantity(productsQuantity)
+                .status(category.getStatus().toString())
+                .createdTime(category.getCreatedTime().toString())
+                .employee(userResponse).build();
     }
 
     @Override
@@ -48,5 +52,11 @@ public class CategoryMapperImpl implements CategoryMapper {
                 .status(category.getStatus().toString())
                 .createdTime(category.getCreatedTime().toString())
                 .employee(userResponse).build();
+    }
+
+    @Override
+    public PagingResponse<CategoryResponse> toResponse(Page<Category> category) {
+        List<CategoryResponse> list = category.stream().map(this::toResponse).toList();
+        return new PagingResponse<>(list, category.getTotalElements(), category.getTotalPages(), category.hasContent());
     }
 }

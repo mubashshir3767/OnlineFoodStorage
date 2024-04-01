@@ -1,6 +1,7 @@
 package com.example.onlinefoodstorage.mappers;
 
 import com.example.onlinefoodstorage.annotations.Mapper;
+import com.example.onlinefoodstorage.dtos.PagingResponse;
 import com.example.onlinefoodstorage.dtos.categories.CategoryResponse;
 import com.example.onlinefoodstorage.dtos.products.ProductRequest;
 import com.example.onlinefoodstorage.dtos.products.ProductResponse;
@@ -13,8 +14,10 @@ import com.example.onlinefoodstorage.mappers.interfaces.CategoryMapper;
 import com.example.onlinefoodstorage.mappers.interfaces.ProductMapper;
 import com.example.onlinefoodstorage.mappers.interfaces.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 @RequiredArgsConstructor
@@ -48,5 +51,11 @@ public class ProductMapperImpl implements ProductMapper {
                 .status(product.getStatus().toString())
                 .validityTime(product.getValidityTime().toString())
                 .createdTime(product.getCreatedTime().toString()).build();
+    }
+
+    @Override
+    public PagingResponse<ProductResponse> toResponse(Page<Product> productPage) {
+        List<ProductResponse> list = productPage.stream().map(this::toResponse).toList();
+        return new PagingResponse<>(list, productPage.getTotalElements(), productPage.getTotalPages(), productPage.hasContent());
     }
 }

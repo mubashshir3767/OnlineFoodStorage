@@ -14,9 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -39,7 +36,7 @@ public class SecurityConfiguration {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()))));
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).authorizeHttpRequests(auth -> auth
-                .requestMatchers("/**",
+                .requestMatchers("/",
                         "/admin-panel/login",
                         "/swagger-ui/**",
                         "/swagger-resources/*",
@@ -56,33 +53,6 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        // Development
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-
-        // Production
-        CorsConfiguration prodFrontend = new CorsConfiguration();
-        prodFrontend.addAllowedOrigin("localhost://8080");
-        prodFrontend.addAllowedHeader("*");
-        prodFrontend.addAllowedMethod("*");
-        source.registerCorsConfiguration("/api/**", prodFrontend);
-
-        CorsConfiguration prodAdminPanel = new CorsConfiguration();
-        prodAdminPanel.addAllowedOrigin("localhost://8080");
-        prodAdminPanel.addAllowedHeader("*");
-        prodAdminPanel.addAllowedMethod("*");
-        source.registerCorsConfiguration("/admin-panel/**", prodAdminPanel);
-
-        return new CorsFilter(source);
     }
 
 }

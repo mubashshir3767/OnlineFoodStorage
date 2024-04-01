@@ -9,9 +9,9 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse implements Serializable {
+public class UserResponse {
 
-    private String id;
+    private Integer id;
 
     private String name;
 

@@ -1,7 +1,5 @@
 package com.example.onlinefoodstorage.security;
 
-import com.example.onlinefoodstorage.enums.TokenType;
-import com.example.onlinefoodstorage.exceptions.InvalidJwtException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,11 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
             Claims claims = jwtService.getClaims(token);
-            String tokenTypeStr = (String) claims.get("type");
-            TokenType tokenType = TokenType.valueOf(tokenTypeStr);
-            if (!tokenType.equals(TokenType.AUTH)) {
-                throw new InvalidJwtException("Token turi auth token emas!");
-            }
+
             String username = claims.getSubject();
             List<String> authorities = (List<String>) claims.get("authorities");
             Set<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()

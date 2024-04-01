@@ -12,7 +12,4 @@ public class CategoryRequest {
     private Integer id;
 
     private String type;
-
-    private Integer employeeId;
-
 }

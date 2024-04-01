@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 @Configuration
-@ConfigurationProperties(prefix = "redis.cache")
 @Data
-public class CacheConfigProperties {
-   private String port;
-   private String host;
-   private Map<String,String> caches;
+@ConfigurationProperties(prefix = "spring.data.redis")
+public class CacheConfigurationProperties {
+    private String port;
+    private String host;
+    private Map<String, String> caches;
 }

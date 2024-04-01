@@ -1,6 +1,7 @@
 package com.example.onlinefoodstorage.service_managers;
 
 import com.example.onlinefoodstorage.annotations.ServiceManager;
+import com.example.onlinefoodstorage.dtos.PagingResponse;
 import com.example.onlinefoodstorage.dtos.products.ProductRequest;
 import com.example.onlinefoodstorage.dtos.products.ProductResponse;
 import com.example.onlinefoodstorage.entities.Category;
@@ -12,6 +13,8 @@ import com.example.onlinefoodstorage.services.interfaces.CategoryService;
 import com.example.onlinefoodstorage.services.interfaces.ProductService;
 import com.example.onlinefoodstorage.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 
 @ServiceManager
@@ -26,8 +29,8 @@ public class ProductServiceManagerImpl implements ProductServiceManager {
     @Override
     public ResponseEntity<ProductResponse> create(ProductRequest request) {
         Category category = categoryService.getById(request.getCategoryId());
-        User user = userService.getUserById(request.getEmployeeId().toString());
-        Product entity = productMapper.toEntity(request, user, category);
+        User employee = userService.getCurrentUser();
+        Product entity = productMapper.toEntity(request, employee, category);
         productService.create(entity);
         return ResponseEntity.ok(productMapper.toResponse(entity));
     }
@@ -36,9 +39,9 @@ public class ProductServiceManagerImpl implements ProductServiceManager {
     public ResponseEntity<ProductResponse> update(ProductRequest request) {
         productService.getById(request.getId());
         Category category = categoryService.getById(request.getCategoryId());
-        User user = userService.getUserById(request.getEmployeeId().toString());
+        User employee = userService.getCurrentUser();
 
-        Product entity = productMapper.toEntity(request, user, category);
+        Product entity = productMapper.toEntity(request, employee, category);
         entity.setId(request.getId());
         productService.create(entity);
         return ResponseEntity.ok(productMapper.toResponse(entity));
@@ -53,5 +56,12 @@ public class ProductServiceManagerImpl implements ProductServiceManager {
     @Override
     public void delete(Integer integer) {
         productService.delete(integer);
+    }
+
+    @Override
+    public ResponseEntity<PagingResponse<ProductResponse>> findByEmployeeId(int page, int size, Integer employeeID) {
+        Page<Product> productPage = productService.findByEmployeeId(PageRequest.of(page,size),employeeID);
+        PagingResponse<ProductResponse> response = productMapper.toResponse(productPage);
+        return ResponseEntity.ok(response);
     }
 }
